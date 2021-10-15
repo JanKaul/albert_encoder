@@ -1,5 +1,5 @@
 import { expect } from '@esm-bundle/chai';
-import { tf, AlbertMultiHeadAttention } from "@weblab-notebook/albert";
+import { tf, AlbertMultiHeadAttention } from "@weblab-notebook/albert_encoder";
 
 describe("create attention layer without mask", () => {
     it('', () => {

@@ -1,5 +1,5 @@
 import { expect } from '@esm-bundle/chai';
-import { tf, AlbertEmbedding } from "@weblab-notebook/albert";
+import { tf, AlbertEmbedding } from "@weblab-notebook/albert_encoder";
 
 describe("test embedding", () => {
     it('', () => {

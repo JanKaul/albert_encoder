@@ -1,5 +1,5 @@
 import { expect } from '@esm-bundle/chai';
-import { tf, AlbertPooler } from "@weblab-notebook/albert";
+import { tf, AlbertPooler } from "@weblab-notebook/albert_encoder";
 
 describe("test encoder", () => {
     it('', () => {
