@@ -1,5 +1,7 @@
 import * as tf from "@tensorflow/tfjs";
 import { nameScopeWrapper } from "./nameScope";
+import { batchedMultiheadedDotProduct, batchedMultiheadedMatmul } from "./customOps";
+
 export class AlbertMultiHeadAttention extends tf.layers.Layer {
     static className = 'AlbertMultiHeadAttention';
     hiddenSize: number;
@@ -35,7 +37,7 @@ export class AlbertMultiHeadAttention extends tf.layers.Layer {
         this.outputDropout = tf.layers.dropout({ rate: hiddenDropoutRate });
     }
     _scaledDotProductAttention([query, key, value, attentionMask = undefined], { training = true } = {}) {
-        let score = tf.einsum("bihj,bkhj->bihk", query, key);
+        let score = batchedMultiheadedDotProduct(query, key);
         score = score.div(tf.sqrt(tf.scalar([...query.shape].pop())));
         if (attentionMask) {
             attentionMask = tf.expandDims(attentionMask, attentionMask.shape.length - 1);
@@ -43,7 +45,7 @@ export class AlbertMultiHeadAttention extends tf.layers.Layer {
         }
         let attnWeights = tf.softmax(score);
         attnWeights = this.attentionDropout.apply(attnWeights, { training: training });
-        let context = tf.einsum("bihk,bkhl->bihl", attnWeights, value);
+        let context = batchedMultiheadedMatmul(attnWeights, value);
         return [context, attnWeights];
     }
     call([query, value, key = undefined, attentionMask = undefined], { training = true } = {}) {

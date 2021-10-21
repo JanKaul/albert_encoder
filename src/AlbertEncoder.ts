@@ -50,10 +50,8 @@ export class AlbertEncoder extends tf.layers.Layer {
                 allHiddenStates = allHiddenStates.concat(groupHiddenStates);
                 allAttentionWeights = allAttentionWeights.concat(groupAttnWeights);
             }
-            let stackedHiddenStates = tf.stack(allHiddenStates, 0);
-            stackedHiddenStates = tf.einsum('ijkl->jikl', stackedHiddenStates);
-            let stackedAttentionWeights = tf.stack(allAttentionWeights, 0);
-            stackedAttentionWeights = tf.einsum('ijklm->jiklm', stackedAttentionWeights);
+            let stackedHiddenStates = tf.stack(allHiddenStates, 1);
+            let stackedAttentionWeights = tf.stack(allAttentionWeights, 1);
             return [hiddenStates, stackedHiddenStates, stackedAttentionWeights];
         });
     }
