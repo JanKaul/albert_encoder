@@ -31,11 +31,10 @@ export class AlbertEncoder extends tf.layers.Layer {
         this.initializerRange = initializerRange;
         this.kwargs = kwargs;
         this.embeddingMapping = tf.layers.dense({ units: this.hiddenSize, kernelInitializer: tf.initializers.truncatedNormal({ stddev: initializerRange }), name: "embedding_mapping" });
-        let temp = [];
+        this.groups = [];
         for (const i of Array(this.numGroups).keys()) {
-            temp.push(new AlbertEncoderGroup({ numLayersEachGroup: this.numLayersEachGroup, hiddenSize: this.hiddenSize, numAttentionHeads: this.numAttentionHeads, intermediateSize: this.intermediateSize, hiddenDropoutRate: this.hiddenDropoutRate, attentionDropoutRate: this.attentionDropoutRate, epsilon: this.epsilon, initializerRange: this.initializerRange, "name": "group_" + i.toString() }));
+            this.groups.push(new AlbertEncoderGroup({ numLayersEachGroup: this.numLayersEachGroup, hiddenSize: this.hiddenSize, numAttentionHeads: this.numAttentionHeads, intermediateSize: this.intermediateSize, hiddenDropoutRate: this.hiddenDropoutRate, attentionDropoutRate: this.attentionDropoutRate, epsilon: this.epsilon, initializerRange: this.initializerRange, "name": "group_" + i.toString() }));
         }
-        this.groups = temp;
 
     }
     call([embeddings, attentionMask = undefined]) {
