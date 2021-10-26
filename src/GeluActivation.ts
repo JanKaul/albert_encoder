@@ -5,8 +5,10 @@ export class GeluActivation extends tf.layers.Layer {
         super({ name: name })
     }
     call(input) {
-        let temp = tf.scalar(0.5).mul(tf.scalar(1.0).add(tf.erf(input.div(tf.sqrt(tf.scalar(2.0))))));
-        return input.mul(temp);
+        return tf.tidy(() => {
+            let temp = tf.scalar(0.5).mul(tf.scalar(1.0).add(tf.erf(input.div(tf.sqrt(tf.scalar(2.0))))));
+            return input.mul(temp);
+        })
     }
 
     computeOutputShape(inputShape) { return inputShape; }
