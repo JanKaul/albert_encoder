@@ -42,13 +42,14 @@ export class AlbertEncoderLayer extends tf.layers.Layer {
                 attentionMask = attentionMask.expandDims(1);
             }
             let state = this.attention.apply([hiddenStates, hiddenStates, hiddenStates, attentionMask]);
-            let outputs = this.ffn.apply(state[0]);
+            let [output, weights] = [state[0], state[1]];
+            let outputs = this.ffn.apply(output);
             outputs = this.activation.apply(outputs);
             outputs = this.ffnOutput.apply(outputs);
             outputs = this.dropout.apply(outputs);
-            outputs = tf.add(outputs, state[0]);
+            outputs = tf.add(outputs, output);
             outputs = this.layerNorm.apply(outputs);
-            return [outputs, state[1]];
+            return [outputs, weights];
         });
     }
     build([statesShape, maskShape = undefined]) {
