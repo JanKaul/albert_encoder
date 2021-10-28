@@ -42,7 +42,7 @@ export class AlbertMultiHeadAttention extends tf.layers.Layer {
             score = score.div(tf.sqrt(tf.scalar([...query.shape].pop())));
             if (attentionMask) {
                 attentionMask = tf.expandDims(attentionMask, attentionMask.shape.length - 1);
-                score = score.add(tf.scalar(1).sub(attentionMask).mul(tf.scalar(-1e9)));
+                score = score.add((tf.scalar(1).sub(attentionMask)).mul(tf.scalar(-1e9)));
             }
             let attnWeights = tf.softmax(score);
             attnWeights = this.attentionDropout.apply(attnWeights, { training: training });
